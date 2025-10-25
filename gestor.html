@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario de Productos - Lista Doblemente Enlazada</title>
+</head>
+<body>
+    <h1>Inventario de Productos (Ordenado por Código)</h1>
+    
+    <div>
+        <label>Código:</label>
+        <input type="number" id="codigo" placeholder="Código del producto"><br><br>
+        
+        <label>Nombre:</label>
+        <input type="text" id="nombre" placeholder="Nombre del producto"><br><br>
+        
+        <label>Cantidad:</label>
+        <input type="number" id="cantidad" placeholder="Cantidad" min="0"><br><br>
+        
+        <label>Costo:</label>
+        <input type="number" id="costo" placeholder="Costo unitario" min="0" step="0.01"><br><br>
+    </div>
+    
+    <div>
+        <button onclick="agregarProducto()">Agregar</button>
+        <button onclick="cancelar()">Cancelar</button>
+        <button onclick="eliminarProducto()">Eliminar</button>
+        <button onclick="buscarProducto()">Buscar</button>
+        <button onclick="listar()">Listar</button>
+        <button onclick="listarInverso()">Listar Inverso</button>
+        <button onclick="extraerPrimero()">Extraer Primero</button>
+        <button onclick="extraerUltimo()">Extraer Último</button>
+    </div>
+    
+    <div id="output">Operaciones se mostrarán aquí...</div>
+
+    <script src="producto.js"></script>
+    <script src="inventario.js"></script>
+    <script>
+        let inventario = new InventarioOrdenado();
+
+        function agregarProducto() {
+            let codigo = parseInt(document.getElementById('codigo').value);
+            let nombre = document.getElementById('nombre').value.trim();
+            let cantidad = parseInt(document.getElementById('cantidad').value);
+            let costo = parseFloat(document.getElementById('costo').value);
+
+            if (!codigo || !nombre || isNaN(cantidad) || cantidad < 0 || isNaN(costo) || costo < 0) {
+                mostrarOutput("Error: Complete todos los campos correctamente (cantidad y costo >= 0).");
+                return;
+            }
+
+            let nuevo = new Producto(codigo, nombre, cantidad, costo);
+            if (inventario.agregar(nuevo)) {
+                mostrarOutput("Producto agregado exitosamente.<br><br>" + inventario.infoTexto());
+                limpiarCampos();
+            } else {
+                mostrarOutput("Error: El código ya existe.");
+            }
+        }
+
+        function cancelar() {
+            limpiarCampos();
+            mostrarOutput("Campos limpiados.");
+        }
+
+        function buscarProducto() {
+            let codigo = parseInt(document.getElementById('codigo').value);
+            if (!codigo) {
+                mostrarOutput("Error: Ingrese un código.");
+                return;
+            }
+            let res = inventario.buscar(codigo);
+            if (res) {
+                mostrarOutput("Producto encontrado:<br>" + res.infoHtml());
+            } else {
+                mostrarOutput("Producto no encontrado.");
+            }
+        }
+
+        function eliminarProducto() {
+            let codigo = parseInt(document.getElementById('codigo').value);
+            if (!codigo) {
+                mostrarOutput("Error: Ingrese un código.");
+                return;
+            }
+            let eliminado = inventario.eliminar(codigo);
+            if (eliminado) {
+                mostrarOutput("Producto eliminado:<br>" + eliminado.infoHtml() + "<br><br>Inventario actual:<br>" + inventario.infoTexto());
+            } else {
+                mostrarOutput("Producto no encontrado.");
+            }
+        }
+
+        function extraerPrimero() {
+            let extraido = inventario.extraerPrimero();
+            if (extraido) {
+                mostrarOutput("Primer producto extraído:<br>" + extraido.infoHtml() + "<br><br>Inventario actual:<br>" + inventario.infoTexto());
+            } else {
+                mostrarOutput("No hay productos para extraer.");
+            }
+        }
+
+        function extraerUltimo() {
+            let extraido = inventario.extraerUltimo();
+            if (extraido) {
+                mostrarOutput("Último producto extraído:<br>" + extraido.infoHtml() + "<br><br>Inventario actual:<br>" + inventario.infoTexto());
+            } else {
+                mostrarOutput("No hay productos para extraer.");
+            }
+        }
+
+        function listar() {
+            console.log("Llamando a inventario.listar() desde HTML");  
+            let resultado = inventario.listar();
+            console.log("Resultado recibido en HTML:", resultado);  
+            mostrarOutput(resultado);
+        }
+
+        function listarInverso() {
+            console.log("Llamando a inventario.listarInverso() desde HTML");  
+            let resultado = inventario.listarInverso();
+            console.log("Resultado recibido en HTML (inverso):", resultado);
+            mostrarOutput(resultado);
+        }
+
+        function mostrarOutput(mensaje) {
+            document.getElementById('output').innerHTML = mensaje;
+        }
+
+        function limpiarCampos() {
+            document.getElementById('codigo').value = '';
+            document.getElementById('nombre').value = '';
+            document.getElementById('cantidad').value = '';
+            document.getElementById('posicion').value = '';
+        }
+    </script>
+</body>
+</html>
