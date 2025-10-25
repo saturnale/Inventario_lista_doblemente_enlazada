@@ -13,18 +13,17 @@ class InventarioOrdenado {
     }
     
     agregar(producto) {
-        console.log("Agregando producto:", producto);  
         let nuevoNodo = new Nodo(producto);
         
         if (!this.primero) {
-        
+            // Lista vacía
             this.primero = nuevoNodo;
             this.ultimo = nuevoNodo;
             return true;
         }
         
         if (producto.codigo < this.primero.producto.codigo) {
-    
+            // Insertar al inicio
             nuevoNodo.siguiente = this.primero;
             this.primero.anterior = nuevoNodo;
             this.primero = nuevoNodo;
@@ -32,24 +31,24 @@ class InventarioOrdenado {
         }
         
         if (producto.codigo > this.ultimo.producto.codigo) {
-
+            // Insertar al final
             nuevoNodo.anterior = this.ultimo;
             this.ultimo.siguiente = nuevoNodo;
             this.ultimo = nuevoNodo;
             return true;
         }
         
-    
+        // Insertar en medio, manteniendo orden
         let actual = this.primero;
         while (actual && actual.producto.codigo < producto.codigo) {
             actual = actual.siguiente;
         }
         
         if (actual && actual.producto.codigo === producto.codigo) {
-            return false; 
+            return false;  // Código ya existe
         }
         
-        
+        // Insertar antes de 'actual'
         nuevoNodo.siguiente = actual;
         nuevoNodo.anterior = actual.anterior;
         if (actual.anterior) {
@@ -66,7 +65,7 @@ class InventarioOrdenado {
                 return actual.producto;
             }
             if (actual.producto.codigo > codigo) {
-                return null; 
+                return null;  // No hay necesidad de seguir buscando
             }
             actual = actual.siguiente;
         }
@@ -94,7 +93,7 @@ class InventarioOrdenado {
                 return actual.producto;
             }
             if (actual.producto.codigo > codigo) {
-                return null; 
+                return null;  
             }
             actual = actual.siguiente;
         }
@@ -136,44 +135,24 @@ class InventarioOrdenado {
     }
     
     listar() {
-        console.log("Ejecutando listar()");  
-        console.log("this.primero:", this.primero); 
         let html = "<h3>Listado de Productos (Orden Normal):</h3>";
         let actual = this.primero;
-        let contador = 0; 
         while (actual) {
-            console.log("Producto actual:", actual.producto); 
-            let info = actual.producto.infoHtml();
-            console.log("infoHtml():", info);  
-            html += info;
+            html += actual.producto.infoHtml();
             actual = actual.siguiente;
-            contador++;
         }
-        console.log(`Productos listados: ${contador}`); 
-        console.log("HTML antes de return:", html);  
         if (!this.primero) html += "<p>No hay productos.</p>";
-        console.log("Retornando html:", html);  
         return html;
     }
     
     listarInverso() {
-        console.log("Ejecutando listarInverso()");  
-        console.log("this.ultimo:", this.ultimo);  
         let html = "<h3>Listado de Productos (Orden Inverso):</h3>";
         let actual = this.ultimo;
-        let contador = 0;  
         while (actual) {
-            console.log("Producto actual (inverso):", actual.producto);  
-            let info = actual.producto.infoHtml();
-            console.log("infoHtml() (inverso):", info);
-            html += info;
+            html += actual.producto.infoHtml();
             actual = actual.anterior;
-            contador++;
         }
-        console.log("Productos listados en inverso:" + contador);  
-        console.log("HTML antes de return (inverso):", html);  
         if (!this.ultimo) html += "<p>No hay productos.</p>";
-        console.log("Retornando html (inverso):", html);  
         return html;
     }
 }
