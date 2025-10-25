@@ -111,17 +111,11 @@
         }
 
         function listar() {
-            console.log("Llamando a inventario.listar() desde HTML");  
-            let resultado = inventario.listar();
-            console.log("Resultado recibido en HTML:", resultado);  
-            mostrarOutput(resultado);
+            mostrarOutput(inventario.listar());
         }
 
         function listarInverso() {
-            console.log("Llamando a inventario.listarInverso() desde HTML");  
-            let resultado = inventario.listarInverso();
-            console.log("Resultado recibido en HTML (inverso):", resultado);
-            mostrarOutput(resultado);
+            mostrarOutput(inventario.listarInverso());
         }
 
         function mostrarOutput(mensaje) {
@@ -132,7 +126,7 @@
             document.getElementById('codigo').value = '';
             document.getElementById('nombre').value = '';
             document.getElementById('cantidad').value = '';
-            document.getElementById('posicion').value = '';
+            document.getElementById('costo').value = '';
         }
     </script>
 </body>
